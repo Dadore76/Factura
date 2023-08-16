@@ -1,7 +1,10 @@
 import pdfkit
 import jinja2
+import os
 from random import randint as ran
 from datetime import datetime
+
+PDF_GENERATED = ""
 
 def validate_data(**kwargs):
     pass
@@ -16,7 +19,7 @@ def prepare_template(context):
     template_loader =  jinja2.FileSystemLoader("./")
     template_env = jinja2.Environment(loader=template_loader)
 
-    html_template = "Python/Template/preview.html"
+    html_template = "Template/preview.html"
     template = template_env.get_template(html_template)
     output_text = template.render(context)
 
@@ -41,10 +44,10 @@ def create_pdf():
     template = prepare_template(context)
 
     # Prepare PDF
-    css_style = "Python/Template/style.css"
+    css_style = "Template/style.css"
     wkhtmltopdf_path = "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe"
     config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
-    output_pdf = "Python/Output/pdfGenerado.pdf"
+    output_pdf = "Output/pdfGenerado.pdf"
 
     options = {
             # 'page-size' : 'B7',
@@ -64,6 +67,16 @@ def create_pdf():
     # Create PDF
     pdfkit.from_string(template, output_pdf, configuration=config, 
                     css=css_style, options=options)
+    
+    full_path = os.getcwd()
+    global PDF_GENERATED
+    PDF_GENERATED = os.path.join(full_path, output_pdf)
+
+def open_pdf():
+    global PDF_GENERATED
+    os.system(PDF_GENERATED)
+    # print(PDF_GENERATED)
+
 
 if __name__ == "__main__":
     create_pdf()
