@@ -10,11 +10,10 @@ def generar_factura():
                      apmt=record['apmt'],
                      value=record['value'],
                      type=record['type'],
-                     month_name=record['month_name']
-                     )
+                     month_name=record['month_name'])
         
 def leer_archivo():
-    df = pandas.read_csv('Data/generar.csv')
+    df = pandas.read_csv('facturapdf/Data/generar.csv')
     return df.to_dict('records')
 
 if __name__ == '__main__':

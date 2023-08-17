@@ -8,21 +8,13 @@ from datetime import datetime
 PDF_GENERATED = ''
 
 def get_number():
-    number = ""
-    
-    with open('Data/number.csv', 'rt') as n:
-        number = n.readline()
-
-    return number
+    with open('facturapdf/Data/number.csv', 'rt') as n:
+        return n.readline()
 
 
 def set_number(number):
-    with open('Data/number.csv', 'wt') as n:
+    with open('facturapdf/Data/number.csv', 'wt') as n:
         n.write(str(number))
-
-
-def validate_data(**kwargs):
-    pass
 
 
 def prepare_template(context):
@@ -35,7 +27,7 @@ def prepare_template(context):
     template_loader =  jinja2.FileSystemLoader('./')
     template_env = jinja2.Environment(loader=template_loader)
 
-    html_template = 'Template/preview.html'
+    html_template = 'facturapdf/Template/preview.html'
     template = template_env.get_template(html_template)
     output_text = template.render(context)
 
@@ -45,6 +37,25 @@ def prepare_template(context):
 def create_pdf(**kwargs):
 
     # Variable validations
+    receipt_number, month, year, pdf_name, context = validate_data(kwargs)
+
+    # Prepare template
+    template = prepare_template(context)
+
+    # Prepare PDF
+    css_style, config, output_pdf, final_folder, options = prepare_pdf(kwargs, month, year, pdf_name)
+
+    # Create PDF
+    pdfkit.from_string(template, output_pdf, configuration=config, 
+                    css=css_style, options=options)
+    
+    set_number(int(receipt_number) + 1)
+
+    global PDF_GENERATED
+    PDF_GENERATED = os.path.join(final_folder, pdf_name)
+    print("Pdf generado: '{}'".format(PDF_GENERATED))
+
+def validate_data(kwargs):
     receipt_number = get_number()
     day = kwargs['date'][0:2]
     month = kwargs['date'][3:5]
@@ -58,15 +69,14 @@ def create_pdf(**kwargs):
                'receipt_number': receipt_number, 'name': kwargs['name'],
                'apmt': kwargs['apmt'], 'month_name': kwargs['month_name'],
                'type': kwargs['type'], 'value': value, 'date': kwargs['date']}
+               
+    return receipt_number,month,year,pdf_name,context
 
-    # Prepare template
-    template = prepare_template(context)
-
-    # Prepare PDF
-    css_style = 'Template/style.css'
+def prepare_pdf(kwargs, month, year, pdf_name):
+    css_style = 'facturapdf/Template/style.css'
     wkhtmltopdf_path = 'C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe'
     config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
-    output_folder = 'Output/{}/{}-{}'.format(year, month, 
+    output_folder = 'facturapdf/Output/{}/{}-{}'.format(year, month, 
                                                 kwargs['month_name'])
     output_pdf = output_folder + '/' + pdf_name
     
@@ -89,31 +99,21 @@ def create_pdf(**kwargs):
             'page-height': '120mm',
             'enable-local-file-access': None
         }
-
-    # Create PDF
-    pdfkit.from_string(template, output_pdf, configuration=config, 
-                    css=css_style, options=options)
-    
-    full_path = os.getcwd()
-    set_number(int(receipt_number) + 1)
-
-    global PDF_GENERATED
-    PDF_GENERATED = os.path.join(final_folder, pdf_name)
-    print("Pdf generado: '{}'".format(PDF_GENERATED))
+        
+    return css_style,config,output_pdf,final_folder,options
 
 
 def format_value(value):
     locale.setlocale(locale.LC_ALL, '')
-    value = locale.currency(value, grouping=True)
-    return value
+    return locale.currency(value, grouping=True)
 
 
 def create_folder(final_folder):
     if (not os.path.exists(final_folder)):
-        folders = final_folder.split('\\')
-        folder = '\\'.join(folders[:-1])
-        
         try:
+            folders = final_folder.split('\\')
+            folder = '\\'.join(folders[:-1])
+            
             os.mkdir(folder)
         except FileExistsError:
             pass
@@ -124,7 +124,6 @@ def create_folder(final_folder):
 def open_pdf():
     global PDF_GENERATED
     os.system('"{}"'.format(PDF_GENERATED))
-    # print(PDF_GENERATED)
 
 
 if __name__ == '__main__':
