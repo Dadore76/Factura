@@ -1,6 +1,9 @@
 <div class="wrapper">
     <div class="title">
-        <div class="logo"></div>
+        <div class="logo">
+            <img style="height: 65px;" src="https://i.ibb.co/XZykHM3/logo.png">
+            <!-- <img style="height: 18px;" src="https://app.useanvil.com/img/email-logo-black.png" /> -->
+        </div>
         <div class="date_wrapper">
             <div class="color_title border_top_curved">FECHA</div>
             <div class="date">
@@ -21,14 +24,14 @@
         <div class="number">
             <div class="color_title border_top_curved">RECIBO</div>
             <div style="height: 15px;"></div>
-            <div class="receipt_number">5678</div>
+            <div class="receipt_number">{{receipt_number}}</div>
         </div>
     </div>
     <div class="data">
         <table>
             <tr>
                 <th>NOMBRE:</th>
-                <td>{{name}}</td>
+                <td class="curved">{{name}}</td>
             </tr>
             <tr>
                 <th>APTO:</th>
@@ -49,8 +52,8 @@
             </tr>
             <tr>
                 <td>ADMINISTRACION</td>
-                <td></td>
-                <td></td>
+                <td>{{date}}</td>
+                <td>{{value}}</td>
             </tr>
             <tr>
                 <td>MULTAS</td>
@@ -87,15 +90,15 @@
                 <td></td>
                 <td></td>
             </tr>
-            <tr>
+            <tr class="pay_type">
                 <td></td>
                 <td class="color_title">METODO PAGO</td>
-                <td></td>
+                <td>{{type}}</td>
             </tr>
             <tr>
                 <td></td>
                 <td class="color_title">TOTAL</td>
-                <td></td>
+                <td>{{value}}</td>
             </tr>
         </table>
     </div>
