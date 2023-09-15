@@ -1,3 +1,4 @@
+import calendar
 import pdfkit
 import jinja2
 import os
@@ -8,12 +9,12 @@ from datetime import datetime
 PDF_GENERATED = ''
 
 def get_number():
-    with open('facturapdf/Data/number.csv', 'rt') as n:
+    with open('Data/number.csv', 'rt') as n:
         return n.readline()
 
 
 def set_number(number):
-    with open('facturapdf/Data/number.csv', 'wt') as n:
+    with open('Data/number.csv', 'wt') as n:
         n.write(str(number))
 
 
@@ -27,7 +28,7 @@ def prepare_template(context):
     template_loader =  jinja2.FileSystemLoader('./')
     template_env = jinja2.Environment(loader=template_loader)
 
-    html_template = 'facturapdf/Template/preview.html'
+    html_template = 'Template/preview.html'
     template = template_env.get_template(html_template)
     output_text = template.render(context)
 
@@ -63,7 +64,8 @@ def validate_data(kwargs):
 
     value = format_value(kwargs['value'])
 
-    pdf_name = '{}-{}.pdf'.format(kwargs['apmt'], kwargs['name'])
+    pdf_name = '{}-{}-{}.pdf'.format(kwargs['apmt'], kwargs['name'], 
+                                  kwargs['month_name'])
 
     context = {'day': day, 'month': month, 'year': year, 
                'receipt_number': receipt_number, 'name': kwargs['name'],
@@ -73,11 +75,13 @@ def validate_data(kwargs):
     return receipt_number,month,year,pdf_name,context
 
 def prepare_pdf(kwargs, month, year, pdf_name):
-    css_style = 'facturapdf/Template/style.css'
+    css_style = 'Template/style.css'
     wkhtmltopdf_path = 'C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe'
     config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
-    output_folder = 'facturapdf/Output/{}/{}-{}'.format(year, month, 
-                                                kwargs['month_name'])
+    
+    english_month_name = calendar.month_name[int(month)]
+    output_folder = 'Output/{}/{}-{}'.format(year, month, 
+                                                english_month_name)
     output_pdf = output_folder + '/' + pdf_name
     
     final_folder = os.path.join(os.getcwd(), 
