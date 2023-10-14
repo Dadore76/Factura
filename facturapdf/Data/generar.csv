@@ -1,20 +1,16 @@
-date,name,apmt,value,type,month_name
-02/09/2023,Gustavo Urrego,204,90000,Administrador,Septiembre
-01/09/2023,Gustavo Urrego,204,90000,Administrador,Octubre
-04/09/2023,Pedro Cantor,301,107000,Banco,Septiembre
-05/09/2023,Miguel Paez,303,96000,Administrador,Septiembre
-05/09/2023,Margaret Moralez,202,96000,Banco,Septiembre
-06/09/2023,Judit Arias,504,90000,Administrador,Septiembre
-07/09/2023,Rosalba Pinilla,404,90000,Administrador,Septiembre
-08/09/2023,Juan Camilo Ardila,502,96000,Banco,Septiembre
-09/09/2023,Alejandro Diaz,203,96000,Banco,Septiembre
-10/09/2023,Juan Ortegon,302,96000,Banco,Septiembre
-10/09/2023,Hector Mahecha,401,107000,Administrador,Septiembre
-10/09/2023,Juan David Fonseca,304,90000,Administrador,Septiembre
-10/09/2023,Juan David Fonseca,304,90000,Administrador,Octubre
-10/09/2023,Juan David Fonseca,304,90000,Administrador,Noviembre
-10/09/2023,Juan David Fonseca,304,90000,Administrador,Diciembre
-10/09/2023,Alfonso Laiton,402,96000,Administrador,Septiembre
-10/09/2023,Elsa Galan,403,96000,Administrador,Septiembre
-10/09/2023,Diana Baquero,201,107000,Banco,Septiembre
-10/09/2023,Zulay Ortega,503,96000,Banco,Septiembre
+date,name,apmt,saving,value,type,month_name,penalty
+16/09/2023,Johana Farfan,501,5000,102000,Banco,Septiembre,10000
+02/10/2023,Margaret Morales,202,5000,91000,Banco,Octubre,
+03/10/2023,Pedro Cantor,301,5000,102000,Banco,Octubre,
+04/10/2023,Miguel Paez,303,5000,91000,Administrador,Octubre,
+05/10/2023,Rosalba Pinilla,404,5000,85000,Administrador,Octubre,
+05/10/2023,Judit Arias,504,5000,85000,Administrador,Octubre,
+06/10/2023,Juan Camilo Ardila,502,5000,91000,Banco,Octubre,
+09/10/2023,Elsa Galan,403,5000,91000,Administrador,Octubre,
+09/10/2023,Jose Alejandro Diaz,203,5000,91000,Banco,Octubre,
+10/10/2023,Diana Baquero,201,5000,102000,Banco,Octubre,
+10/10/2023,Johana Farfan,501,5000,102000,Banco,Octubre,
+10/10/2023,Zulay Ortega,503,5000,91000,Banco,Octubre,
+10/10/2023,Juan Ortegon,302,5000,91000,Banco,Octubre,
+10/10/2023,Hector Mahecha,401,5000,102000,Administrador,Octubre,
+10/10/2023,Alfonso Laiton,402,5000,91000,Administrador,Octubre,

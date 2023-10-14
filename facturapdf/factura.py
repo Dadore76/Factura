@@ -9,26 +9,21 @@ from datetime import datetime
 PDF_GENERATED = ''
 
 def get_number():
-    with open('Data/number.csv', 'rt') as n:
+    with open('facturapdf/Data/number.csv', 'rt') as n:
         return n.readline()
 
 
 def set_number(number):
-    with open('Data/number.csv', 'wt') as n:
+    with open('facturapdf/Data/number.csv', 'wt') as n:
         n.write(str(number))
 
 
 def prepare_template(context):
 
-    # validations = validate_data(context)
-
-    # if validations:
-    #     raise ValueError (validations)
-
     template_loader =  jinja2.FileSystemLoader('./')
     template_env = jinja2.Environment(loader=template_loader)
 
-    html_template = 'Template/preview.html'
+    html_template = 'facturapdf/Template/preview.html'
     template = template_env.get_template(html_template)
     output_text = template.render(context)
 
@@ -44,7 +39,7 @@ def create_pdf(**kwargs):
     template = prepare_template(context)
 
     # Prepare PDF
-    css_style, config, output_pdf, final_folder, options = prepare_pdf(kwargs, month, year, pdf_name)
+    css_style, config, output_pdf, final_folder, options = prepare_pdf(month, year, pdf_name)
 
     # Create PDF
     pdfkit.from_string(template, output_pdf, configuration=config, 
@@ -55,6 +50,7 @@ def create_pdf(**kwargs):
     global PDF_GENERATED
     PDF_GENERATED = os.path.join(final_folder, pdf_name)
     print("Pdf generado: '{}'".format(PDF_GENERATED))
+    # open_pdf()
 
 def validate_data(kwargs):
     receipt_number = get_number()
@@ -63,6 +59,10 @@ def validate_data(kwargs):
     year = kwargs['date'][6:10]
 
     value = format_value(kwargs['value'])
+    savings = format_value(kwargs['savings'])
+    penalty = format_value(kwargs['penalty']) if kwargs['penalty'] > 0 else ""
+    date_penalty = kwargs['date'] if penalty != "" else ""
+    total = calcular_total(kwargs)
 
     pdf_name = '{}-{}-{}.pdf'.format(kwargs['apmt'], kwargs['name'], 
                                   kwargs['month_name'])
@@ -70,17 +70,25 @@ def validate_data(kwargs):
     context = {'day': day, 'month': month, 'year': year, 
                'receipt_number': receipt_number, 'name': kwargs['name'],
                'apmt': kwargs['apmt'], 'month_name': kwargs['month_name'],
-               'type': kwargs['type'], 'value': value, 'date': kwargs['date']}
+               'type': kwargs['type'], 'value': value, 'date': kwargs['date'],
+               'savings': savings, 'penalty': penalty, 'date_penalty': date_penalty,
+               'total': total}
                
     return receipt_number,month,year,pdf_name,context
 
-def prepare_pdf(kwargs, month, year, pdf_name):
-    css_style = 'Template/style.css'
+def calcular_total(kwargs):
+    total = kwargs['value'] + kwargs['savings']
+    total = total + kwargs['penalty'] if kwargs['penalty'] > 0 else total
+    total = format_value(total)
+    return total
+
+def prepare_pdf(month, year, pdf_name):
+    css_style = 'facturapdf/Template/style.css'
     wkhtmltopdf_path = 'C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe'
     config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
     
     english_month_name = calendar.month_name[int(month)]
-    output_folder = 'Output/{}/{}-{}'.format(year, month, 
+    output_folder = 'facturapdf/Output/{}/{}-{}'.format(year, month, 
                                                 english_month_name)
     output_pdf = output_folder + '/' + pdf_name
     
