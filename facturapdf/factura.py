@@ -1,6 +1,7 @@
 import calendar
 import pdfkit
 import jinja2
+import math
 import os
 import locale
 from random import randint as ran
@@ -61,8 +62,12 @@ def validate_data(kwargs):
     value = format_value(kwargs['value'])
     savings = format_value(kwargs['savings'])
     penalty = format_value(kwargs['penalty']) if kwargs['penalty'] > 0 else ""
+    value_others = format_value(kwargs['value_others']) if kwargs['value_others'] > 0 else ""
+    date_others = kwargs['date'] if value_others != "" else ""
     date_penalty = kwargs['date'] if penalty != "" else ""
     total = calcular_total(kwargs)
+
+    desc_others = ': ' + kwargs['desc_others'] if not isinstance(kwargs['desc_others'], float) else ""
 
     pdf_name = '{}-{}-{}.pdf'.format(kwargs['apmt'], kwargs['name'], 
                                   kwargs['month_name'])
@@ -72,13 +77,15 @@ def validate_data(kwargs):
                'apmt': kwargs['apmt'], 'month_name': kwargs['month_name'],
                'type': kwargs['type'], 'value': value, 'date': kwargs['date'],
                'savings': savings, 'penalty': penalty, 'date_penalty': date_penalty,
-               'total': total}
+               'total': total, 'value_others': value_others, 'date_others': date_others,
+               'desc_others': desc_others}
                
     return receipt_number,month,year,pdf_name,context
 
 def calcular_total(kwargs):
     total = kwargs['value'] + kwargs['savings']
     total = total + kwargs['penalty'] if kwargs['penalty'] > 0 else total
+    total = total + kwargs['value_others'] if kwargs['value_others'] > 0 else total
     total = format_value(total)
     return total
 

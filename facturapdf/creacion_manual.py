@@ -13,6 +13,8 @@ def generar_factura():
                      month_name=record['month_name'],
                      savings=record['saving'],
                      penalty=record['penalty'],
+                     desc_others=record['desc_others'],
+                     value_others=record['value_others'],
                     )
         
 def leer_archivo():
