@@ -2,6 +2,8 @@
 facturapdf/Output/
 .vscode/
 facturapdf/venv/
+facturapdf/Data/generar.csv
+facturapdf/Data/number.csv
 
 # Byte-compiled / optimized / DLL files
 facturapdf/__pycache__/
