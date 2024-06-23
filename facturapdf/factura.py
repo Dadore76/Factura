@@ -1,21 +1,22 @@
 import calendar
-import pdfkit
-import jinja2
+import locale
 import math
 import os
-import locale
-from random import randint as ran
 from datetime import datetime
+from random import randint as ran
+
+import jinja2
+import pdfkit
 
 PDF_GENERATED = ''
 
 def get_number():
-    with open('facturapdf/Data/number.csv', 'rt') as n:
+    with open('Data/number.csv', 'rt') as n:
         return n.readline()
 
 
 def set_number(number):
-    with open('facturapdf/Data/number.csv', 'wt') as n:
+    with open('Data/number.csv', 'wt') as n:
         n.write(str(number))
 
 
@@ -24,7 +25,7 @@ def prepare_template(context):
     template_loader =  jinja2.FileSystemLoader('./')
     template_env = jinja2.Environment(loader=template_loader)
 
-    html_template = 'facturapdf/Template/preview.html'
+    html_template = 'Template/preview.html'
     template = template_env.get_template(html_template)
     output_text = template.render(context)
 
@@ -90,12 +91,12 @@ def calcular_total(kwargs):
     return total
 
 def prepare_pdf(month, year, pdf_name):
-    css_style = 'facturapdf/Template/style.css'
+    css_style = 'Template/style.css'
     wkhtmltopdf_path = 'C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe'
     config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
     
     english_month_name = calendar.month_name[int(month)]
-    output_folder = 'facturapdf/Output/{}/{}-{}'.format(year, month, 
+    output_folder = 'Output/{}/{}-{}'.format(year, month, 
                                                 english_month_name)
     output_pdf = output_folder + '/' + pdf_name
     
